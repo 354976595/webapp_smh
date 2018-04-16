@@ -10,9 +10,17 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
        ">
     <!-- 开启包扫描，并注册注解 -->
+    <bean id="c" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:log4j.properties</value>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
     <context:component-scan base-package="com.apep.webapp"/>
     <!-- 引入属性文件 -->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--<context:property-placeholder></context:property-placeholder>-->
     <!-- 配置C3P0连接池 -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <!-- 数据库连接相关信息 -->
