@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+       <bean id="c" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+              <property name="locations">
+                     <list>
+                            <value>classpath:log4j.properties</value>
+                     </list>
+              </property>
+       </bean>
+       <!-- 开启包扫描，并注册注解 -->
+       <context:component-scan base-package="apep.com.webapp"/>
+
+       <!-- 配置C3P0连接池 -->
+       <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+              <!-- 数据库连接相关信息 -->
+              <property name="jdbcUrl" value="${jdbc.url}"/>
+              <property name="driverClass" value="${jdbc.driverClass}"/>
+              <property name="user" value="${jdbc.username}"/>
+              <property name="password" value="${jdbc.password}"/>
+              <property name="loginTimeout" value="20000" />
+              <property name="minPoolSize" value="2" />
+              <property name="maxPoolSize" value="10" />
+              <property name="initialPoolSize" value="2" />
+       </bean>
+
+       <!-- 配置Hibernate的SessionFactory -->
+       <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+              <!-- 注入连接池 -->
+              <property name="dataSource" ref="dataSource"/>
+              <!-- 配置Hibernate属性 -->
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.show_sql">true</prop>
+                            <!-- 是否展示SQL -->
+                            <prop key="hibernate.hbm2ddl.auto">update</prop>
+                            <!-- 是否自动创建表结构 -->
+                            <prop key="hibernate.format_sql">true</prop>
+                            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                     </props>
+              </property>
+              <!-- 扫描并加载注解过的实体类 -->
+               <!--第一种配置方式-->
+              <property name="packagesToScan">
+              <list>
+              <value>apep.com.webapp.po.*</value>
+              </list>
+              </property>
+              <!-- 第二种配置方式-->
+              <!--<property name="packagesToScan" value="apep.com.webapp.po"/>-->
+       </bean>
+
+       <bean id="dataSource_mhxy" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+              <property name="jdbcUrl" value="${jdbc2.url}"/>
+              <property name="driverClass" value="${jdbc.driverClass}"/>
+              <property name="user" value="${jdbc.username}"/>
+              <property name="password" value="${jdbc.password}"/>
+       </bean>
+       <bean id="sessionFactory_mhxy" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+              <property name="dataSource" ref="dataSource_mhxy"/>
+              <!-- 配置Hibernate属性 -->
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.show_sql">true</prop>
+                            <!-- 是否展示SQL -->
+                            <prop key="hibernate.hbm2ddl.auto">update</prop>
+                            <!-- 是否自动创建表结构 -->
+                            <prop key="hibernate.format_sql">true</prop>
+                            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                     </props>
+              </property>
+              <property name="packagesToScan">
+                     <list>
+                            <value>apep.com.webapp.po.*</value>
+                     </list>
+              </property>
+
+       </bean>
+</beans>
